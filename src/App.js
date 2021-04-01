@@ -1,57 +1,101 @@
 import React, { Component } from 'react'
-import axios from 'axios'
-import ReactTable from "react-table"; 
+// import axios from 'axios'
+import ReactTable from "react-table";
 import 'react-table/react-table.css'
 
-export default class App extends Component {
-  constructor(props){
+class App extends Component {
+  constructor(props) {
     super(props)
     this.state = {
-      users: [],
-      loading:true
+      posts: [],
+      // loading: true
+      // items:[],
+      // isloaded:false
     }
   }
-  async getUsersData(){
-    const res = await axios.get('https://jsonplaceholder.typicode.com/users')
-    console.log(res.data)
-    this.setState({loading:false, users: res.data})
+  // async getUsersData() {
+  //   const res = await axios.get('https://walkwel.herokuapp.com/')
+  //   console.log(res)
+  //   .then(res =>res.json())
+  //   .then(users =>{
+  //     this.setState({users:users})
+  //   })
+  //   // this.setState({ loading: false, users: res.data})
+  //   // console.log(res.data.conversations)
+  // }
+  // componentDidMount() {
+  //   // this.getUsersData()
+  //   // fetch('https://walkwel.herokuapp.com/')
+  //   // .then(res=> res.json())
+  //   //   .then(json =>{
+  //   //     this.setState({
+  //   //       isloaded:true,
+  //   //       items:json,
+  //   //     })
+  //   //   })
+  //   }
+  componentDidMount() {
+    const url = "https://walkwel.herokuapp.com/";
+
+    fetch(url, {
+      method: 'GET',
+    }).then(response => response.json()).then(posts => {
+      console.log(posts)
+      this.setState({ posts: posts.conversions })
+    })
   }
-  componentDidMount(){
-    this.getUsersData()
-  }
+
   render() {
-    const columns = [{  
-      Header: 'ID',  
-      accessor: 'id',
-     }
-     ,{  
-      Header: 'Name',  
-      accessor: 'name' ,
+    const data = this.state.posts;
+    const columns = [
+      {
+        Header: 'First Name',
+        accessor: 'firstName',
       }
-     
-     ,{  
-     Header: 'Username',  
-     accessor: 'username' ,
-     }
-     ,{  
-     Header: 'Phone',  
-     accessor: 'phone',
-     },
-     {  
-      Header: 'Email',  
-      accessor: 'email',
+      , {
+        Header: 'Last Name',
+        accessor: 'lastName',
+      }
+
+      , {
+        Header: 'Email',
+        accessor: 'email',
+      }
+      , {
+        Header: 'DOB',
+        accessor: 'dob',
       },
-      {  
-        Header: 'Website',  
-        accessor: 'website',
-        }
-  ]
+      {
+        Header: 'Address',
+        accessor: 'address',
+      },
+      {
+        Header: 'City',
+        accessor: 'city',
+      },
+      {
+        Header: 'Gender',
+        accessor: 'gender',
+      },
+      {
+        Header: 'IQ',
+        accessor: 'iq',
+      }
+    ]
     return (
-      <ReactTable  
-      data={this.state.users}  
-      columns={columns}  
-   />
+      <div>
+        <ReactTable
+          className="-striped -highlight"
+          data={data}
+          filterable
+          columns={columns}
+          defaultPageSize={10}>
+
+        </ReactTable>
+
+      </div>
     )
   }
 }
 
+export default App;
